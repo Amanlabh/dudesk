@@ -1,6 +1,6 @@
-import ThemedBioseedChatbot from "@/components/ThemedBioseedChatbot"
+import Dudesk from "@/components/DudeskChatbot"
 
 export default function Home() {
-  return <ThemedBioseedChatbot />
+  return <Dudesk />
 }
 
