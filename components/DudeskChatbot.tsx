@@ -50,26 +50,50 @@ function DuDeskChatbot() {
     }
   };
 
-  const sanitizeResponse = (message: string) => {
-    return message
-      .replace(/cuet_data.csv|links.csv|list.csv/g, '') // Removes any file mentions
-      .replace(/\*\*([^\*]+)\*\*/g, '$1') // Removes **text** formatting
-      .replace(/analyzed the provided files|based on the `?`? file you provided,/g, 'analyzed the relevant information')
-      .replace(/\*/g, '') // Removes remaining '*' asterisks
-      .replace(/\n/g, '<br />')
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s]+)\)/g, '[$1]($2)')
-      .replace(/^\s*\*\s/gm, (match, index) => {
-        return `<ol class="list-decimal pl-5"><li>` + (index + 1) + '.';
-      }) // Convert * to numbered list
-      .replace(/\n/gm, '</li>') // Closing li tag
-      .replace(/-+/gm, '</ol>') // Close the ordered list at the end
-      .replace(/Please note that this list is based on the provided CSV data./g, '') // Completely remove this sentence
-      .replace(
-        /(https?:\/\/[^\s]+)(?<!\])/g,
-        '<a href="$1" target="_blank" class="text-blue-600 underline hover:text-blue-800">$1</a>'
-      ) // Convert links to clickable blue text
-      .replace(/Good day/g, 'Hello') // Replace "Good day" with "Hello"
-  };
+ const sanitizeResponse = (message: string) => {
+  // Remove file mentions
+  message = message.replace(/cuet_data.csv|links.csv|list.csv/g, '');
+
+  // Remove **text** formatting
+  message = message.replace(/\*\*([^\*]+)\*\*/g, '$1');
+
+  // Replace phrases like "analyzed the provided files" with a generic phrase
+  message = message.replace(/analyzed the provided files|based on the `?`? file you provided,/g, 'analyzed the relevant information');
+
+  // Remove remaining '*' asterisks
+  message = message.replace(/\*/g, '');
+
+  // Replace newlines with <br />
+  message = message.replace(/\n/g, '<br />');
+
+  // Remove specific sentences
+  message = message.replace(/Please note that this list is based on the provided CSV data./g, '');
+
+  // Replace "Good day" with "Hello"
+  message = message.replace(/Good day/g, 'Hello');
+
+  // Convert links to clickable blue text (only once)
+  message = message.replace(
+    /(https?:\/\/[^\s]+)(?<!\])/g,
+    (match, p1) => {
+      // Check if the link is already wrapped in an anchor tag
+      if (!/<a\s[^>]*href=["']/.test(message)) {
+        return `<a href="${p1}" target="_blank" class="text-blue-600 underline hover:text-blue-800">${p1}</a>`;
+      }
+      return match; // Return the original match if already processed
+    }
+  );
+
+  // Convert * to numbered list
+  message = message.replace(/^\s*\*\s/gm, (match, index) => {
+    return `<ol class="list-decimal pl-5"><li>` + (index + 1) + '.';
+  });
+
+  // Close the ordered list at the end
+  message = message.replace(/-+/gm, '</ol>');
+
+  return message;
+};
 
   const handleSubmitWithContext = async (event: React.FormEvent) => {
     event.preventDefault();
