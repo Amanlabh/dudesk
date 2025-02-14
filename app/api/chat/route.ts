@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   systemMessage += `\n\nA file has been uploaded. The file name is cuet_updates.csv. In your responses, go thorugh this data before giving answers that is not in the data.`;
 
   // API key (use environment variable in production)
-  const gemini_token = "AIzaSyA5cy_rQPePGwriEQZ-RHhCuZDULebrwY0";
+  const gemini_token = "AIzaSyAaJKGAcfAVpdNV7PC-IuHhXS_votcPQu0";
 
   const google = createGoogleGenerativeAI({
     apiKey: gemini_token,
