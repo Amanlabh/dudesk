@@ -286,6 +286,7 @@ function DuDeskChatbot() {
             </div>
           )}
 
+          
 
           {currentStep === "eligibility_subjects" && (
             <div className="mb-2 sm:mb-4 text-left w-[90%] sm:w-[70%] md:w-[50%] lg:w-[40%]">
